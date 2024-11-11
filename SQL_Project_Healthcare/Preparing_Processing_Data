@@ -1,40 +1,35 @@
--- 1. Checked the internal structure of data frames
+-- 1. Checked the internal structure (i.e., data types) of data frames
 
-SELECT
-  column_name,
-  data_type
-FROM
-  information_schema.columns
-WHERE
-  table_name = 'encounters'
---> 
+SELECT * 
+FROM public.encounters
+--> Timestamp data type columns ('Start' and 'Stop') must be designated as 'date' and 'time' data types. 
+--> Character type data 'Code' and 'Reason code' columns require converting to integers. 
 
-SELECT
-  column_name,
-  data_type
-FROM
-  information_schema.columns
-WHERE
-  table_name = 'patients'
+SELECT * 
+FROM public.patients
+--> No data types required cleansing.
 
-SELECT
-  column_name,
-  data_type
-FROM
-  information_schema.columns
-WHERE
-  table_name = 'immunizations'
+SELECT * 
+FROM public.immunizations
+--> The Timestamp data type column ('date') requires converting to 'date' and 'time' data types.
 
-SELECT
-  column_name,
-  data_type
-FROM
-  information_schema.columns
-WHERE
-  table_name = 'conditions'
---> 
+SELECT * 
+FROM public.conditions
+--> Character type data within the 'code' column must be converted to integer data types.
 
--- 2. Checked for duplicates within datasets
+-- 2. Converted data types requiring cleansing
+
+SELECT *,
+CAST(start AS DATE) as start_date,
+CAST(start AS TIME) as start_time,
+CAST(stop AS DATE) as stop_date,
+CAST(stop AS TIME) as stop_time,
+CAST(code AS INT)
+FROM public.encounters
+
+
+
+-- 3. Checked for duplicates within datasets
 
 SELECT id, COUNT(*)
 FROM public.encounters
