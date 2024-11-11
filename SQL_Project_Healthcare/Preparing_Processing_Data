@@ -1,5 +1,6 @@
 --1. Checked the internal structure of tables--
 
+
 --2. Checked for duplicates within datasets--
 
 SELECT id, COUNT(*)
@@ -11,4 +12,25 @@ SELECT id, COUNT(*)
 FROM public.patients
 GROUP BY id
 HAVING COUNT(*) > 1
+
+SELECT patient, COUNT(*)
+FROM public.immunizations
+GROUP BY patient
+HAVING COUNT(*) > 1
+
+SELECT patient, COUNT(*)
+FROM public.conditions
+GROUP BY patient
+HAVING COUNT(*) > 1
+
+--> No duplicates were present in the 'patient' or 'encounters' data frames.
+--> Both the 'immunizations' and 'conditions' data frames had a range of patients that had encountered the hospital many times. 
+--> However, no duplicates were removed, as each 'patient' had encountered the hospital for diverse immunizations and conditions. 
+--> This was cross-checked with the DISTINCT function:
+
+SELECT DISTINCT *
+FROM public.conditions
+
+SELECT DISTINCT *
+FROM public.immunizations
 
