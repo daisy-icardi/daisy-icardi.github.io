@@ -1,3 +1,4 @@
+```ruby
 -- 1. Checked the internal structure (i.e., data types) of data frames
 
 # Encounters
@@ -61,7 +62,7 @@ GROUP BY patient
 HAVING COUNT(*) > 1
 
 --> No duplicates were present in the 'patient' or 'encounters' data frames.
---> Both the 'immunizations' and 'conditions' data frames had a range of patients that had encountered the hospital many times. 
+--> Both the 'immunizations' and 'conditions' data frames had a range of patients who had encountered the hospital many times. 
 --> However, no duplicates were removed, as each 'patient' had encountered the hospital for diverse immunizations and conditions. 
 --> This was cross-checked with the DISTINCT function:
 
@@ -70,5 +71,17 @@ FROM public.conditions
 
 SELECT DISTINCT *
 FROM public.immunizations
+
+-- 4. Checked null or blank values within data frames
+
+# Encounters example:
+SELECT COUNT(*)
+FROM public.encounters
+WHERE description IS NULL
+--> 1,221 values were recognized as null within the encounters data frame across columns 'description' and 'code'.
+--> 266,986 values were recognized as null within the 'reasoncode' column in the encounters data frame.
+--> All other columns had 0 null values. 
+
+```
 
 
