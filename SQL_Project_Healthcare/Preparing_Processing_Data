@@ -1,1 +1,14 @@
+--1. Checked the internal structure of tables--
+
+--2. Checked for duplicates within datasets--
+
+SELECT id, COUNT(*)
+FROM public.encounters
+GROUP BY id
+HAVING COUNT(*) > 1
+
+SELECT id, COUNT(*)
+FROM public.patients
+GROUP BY id
+HAVING COUNT(*) > 1
 
