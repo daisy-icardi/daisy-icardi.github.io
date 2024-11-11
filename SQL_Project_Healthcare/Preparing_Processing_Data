@@ -1,24 +1,29 @@
 -- 1. Checked the internal structure (i.e., data types) of data frames
 
+# Encounters
 SELECT * 
 FROM public.encounters
---> Timestamp data type columns ('Start' and 'Stop') must be designated as 'date' and 'time' data types. 
---> Character type data 'Code' and 'Reason code' columns require converting to integers. 
+--> Timestamp data type columns ('Start' and 'Stop') were designated as 'date' and 'time' data types for further analysis of date/time.
+--> Character type data within the 'Code' column required conversion into integer type data. 
 
+# Patients
 SELECT * 
 FROM public.patients
 --> No data types required cleansing.
 
+# Immunizations
 SELECT * 
 FROM public.immunizations
---> The Timestamp data type column ('date') requires converting to 'date' and 'time' data types.
+--> The Timestamp data type column ('date') requires converting to 'date' and 'time' data types for further analysis of date/time.
 
+# Conditions
 SELECT * 
 FROM public.conditions
---> Character type data within the 'code' column must be converted to integer data types.
+--> No data types required cleansing. 
 
--- 2. Converted data types requiring cleansing
+-- 2. Added columns converting the data types that required cleansing
 
+# Encounters 
 SELECT *,
 CAST(start AS DATE) as start_date,
 CAST(start AS TIME) as start_time,
@@ -27,7 +32,11 @@ CAST(stop AS TIME) as stop_time,
 CAST(code AS INT)
 FROM public.encounters
 
-
+# Immunizations
+SELECT *,
+CAST(date AS DATE) as date,
+CAST(date AS TIME) as time
+FROM public.immunizations
 
 -- 3. Checked for duplicates within datasets
 
@@ -61,4 +70,5 @@ FROM public.conditions
 
 SELECT DISTINCT *
 FROM public.immunizations
+
 
