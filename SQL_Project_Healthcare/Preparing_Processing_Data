@@ -1,7 +1,40 @@
---1. Checked the internal structure of tables--
+-- 1. Checked the internal structure of data frames
 
+SELECT
+  column_name,
+  data_type
+FROM
+  information_schema.columns
+WHERE
+  table_name = 'encounters'
+--> 
 
---2. Checked for duplicates within datasets--
+SELECT
+  column_name,
+  data_type
+FROM
+  information_schema.columns
+WHERE
+  table_name = 'patients'
+
+SELECT
+  column_name,
+  data_type
+FROM
+  information_schema.columns
+WHERE
+  table_name = 'immunizations'
+
+SELECT
+  column_name,
+  data_type
+FROM
+  information_schema.columns
+WHERE
+  table_name = 'conditions'
+--> 
+
+-- 2. Checked for duplicates within datasets
 
 SELECT id, COUNT(*)
 FROM public.encounters
