@@ -1,63 +1,93 @@
-```ruby
--- 1. Checked the internal structure (i.e., data types) of data frames
+-- 1. Removed irrelevant data for analysis
+
+CREATE TABLE encounters_data AS
+SELECT id, start, stop, patient, encounterclass, description, base_encounter_cost, total_claim_cost, payer_coverage
+FROM public.encounters 
+--> Organization, provider, payer, code and reasoncode columns were removed as they did not elucidate any information viable for analysis.
+
+CREATE TABLE patients_data AS
+SELECT id, birthdate, deathdate, prefix, first, last, race, ethnicity, gender, address, city, state, county, zip, healthcare_expenses, healthcare_coverage, income
+FROM public.patients
+--> Lat, lon, mrn, fips, ssn, suffix, drivers, passport columns were removed as they did not elucidate any information viable for analysis.
+
+CREATE TABLE immunizations_data AS
+SELECT date, patient, description
+FROM public.immunizations
+--> Encounter and code columns were removed as they did not elucidate any information viable for analysis.
+
+CREATE TABLE conditions_data AS
+SELECT start, stop, patient, description
+FROM public.conditions
+--> Encounter and code columns were removed as they did not elucidate any information viable for analysis.
+
+-- 2. Checked the internal structure (i.e., data types) of new data frames
 
 # Encounters
 SELECT * 
-FROM public.encounters
+FROM encounters_data
 --> Timestamp data type columns ('Start' and 'Stop') were designated as 'date' and 'time' data types for further analysis of date/time.
---> Character type data within the 'Code' column required conversion into integer type data. 
 
 # Patients
 SELECT * 
-FROM public.patients
+FROM patients_data
 --> No data types required cleansing.
 
 # Immunizations
 SELECT * 
-FROM public.immunizations
+FROM immunizations_data
 --> The Timestamp data type column ('date') requires converting to 'date' and 'time' data types for further analysis of date/time.
 
 # Conditions
 SELECT * 
-FROM public.conditions
+FROM conditions_data
 --> No data types required cleansing. 
 
--- 2. Added columns converting the data types that required cleansing
+-- 3. Added columns separating date and time for further analysis
 
 # Encounters 
-SELECT *,
-CAST(start AS DATE) as start_date,
-CAST(start AS TIME) as start_time,
-CAST(stop AS DATE) as stop_date,
-CAST(stop AS TIME) as stop_time,
-CAST(code AS INT)
-FROM public.encounters
+ALTER TABLE encounters_data
+ADD start_date DATE,
+ADD start_time TIME,
+ADD stop_date DATE,
+ADD stop_time TIME
+
+UPDATE encounters_data
+SET start_date = CAST(start AS DATE)
+
+UPDATE encounters_data
+SET start_time = CAST(start AS TIME)
+
+UPDATE encounters_data
+SET stop_date = CAST(stop AS DATE)
+
+UPDATE encounters_data
+SET stop_time = CAST(stop AS TIME)
 
 # Immunizations
 SELECT *,
 CAST(date AS DATE) as date,
 CAST(date AS TIME) as time
-FROM public.immunizations
+FROM immunizations_data
 
 -- 3. Checked for duplicates within datasets
 
 SELECT id, COUNT(*)
-FROM public.encounters
+FROM encounters_data
 GROUP BY id
 HAVING COUNT(*) > 1
 
 SELECT id, COUNT(*)
-FROM public.patients
+FROM patients_data
 GROUP BY id
 HAVING COUNT(*) > 1
 
 SELECT patient, COUNT(*)
-FROM public.immunizations
+FROM immunizations_data
 GROUP BY patient
 HAVING COUNT(*) > 1
 
 SELECT patient, COUNT(*)
-FROM public.conditions
+FROM conditions_data
 GROUP BY patient
 HAVING COUNT(*) > 1
 
@@ -67,21 +97,21 @@ HAVING COUNT(*) > 1
 --> This was cross-checked with the DISTINCT function:
 
 SELECT DISTINCT *
-FROM public.conditions
+FROM conditions_data
 
 SELECT DISTINCT *
-FROM public.immunizations
+FROM immunizations_data
 
 -- 4. Checked null or blank values within data frames
 
 # Encounters example:
 SELECT COUNT(*)
-FROM public.encounters
+FROM encounters_data
 WHERE description IS NULL
---> 1,221 values were recognized as null within the encounters data frame across columns 'description' and 'code'.
---> 266,986 values were recognized as null within the 'reasoncode' column in the encounters data frame.
+--> 1,221 values were recognized as null within the encounters data frame across column 'description'. 
 --> All other columns had 0 null values. 
 
-```
+# Patients: 
+
 
 
