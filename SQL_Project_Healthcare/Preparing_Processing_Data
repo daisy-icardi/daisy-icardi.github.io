@@ -8,7 +8,7 @@ FROM public.encounters
 CREATE TABLE patients_data AS
 SELECT id, birthdate, deathdate, prefix, first, last, race, ethnicity, gender, address, city, state, county, zip, healthcare_expenses, healthcare_coverage, income
 FROM public.patients
---> Lat, lon, mrn, fips, ssn, suffix, drivers, passport columns were removed as they did not elucidate any information viable for analysis.
+--> Lat, lon, mrn, fips, ssn, suffix, drivers, passport, birthplace, columns were removed as they did not elucidate any information viable for analysis.
 
 CREATE TABLE immunizations_data AS
 SELECT date, patient, description
@@ -25,7 +25,8 @@ FROM public.conditions
 # Encounters
 SELECT * 
 FROM encounters_data
---> Timestamp data type columns ('Start' and 'Stop') were designated as 'date' and 'time' data types for further analysis of date/time.
+--> All data types were correct and did not require converting.
+--> Timestamp data type columns ('Start' and 'Stop') will be designated as 'date' and 'time' data types for further analysis of date/time.
 
 # Patients
 SELECT * 
@@ -64,10 +65,19 @@ UPDATE encounters_data
 SET stop_time = CAST(stop AS TIME)
 
 # Immunizations
-SELECT *,
-CAST(date AS DATE) as date,
-CAST(date AS TIME) as time
-FROM immunizations_data
+ALTER TABLE immunizations_data
+RENAME date to date_time
+--> The date column was initially renamed date_time to prevent addition errors with existing column names.
+
+ALTER TABLE immunizations_data
+ADD date DATE,
+ADD time TIME
+
+UPDATE immunizations_data
+SET time = CAST(date_time AS TIME)
+
+UPDATE immunizations_data
+SET date = CAST(date_time AS DATE)
 
 -- 3. Checked for duplicates within datasets
 
@@ -93,7 +103,7 @@ HAVING COUNT(*) > 1
 
 --> No duplicates were present in the 'patient' or 'encounters' data frames.
 --> Both the 'immunizations' and 'conditions' data frames had a range of patients who had encountered the hospital many times. 
---> However, no duplicates were removed, as each 'patient' had encountered the hospital for diverse immunizations and conditions. 
+--> However, no duplicates were removed, as each 'patient' had encountered the hospital for diverse immunizations and conditions on different dates/times. 
 --> This was cross-checked with the DISTINCT function:
 
 SELECT DISTINCT *
@@ -108,10 +118,19 @@ FROM immunizations_data
 SELECT COUNT(*)
 FROM encounters_data
 WHERE description IS NULL
---> 1,221 values were recognized as null within the encounters data frame across column 'description'. 
+--> 1,221 values were recognized null within the encounters data frame across column 'description'. 
 --> All other columns had 0 null values. 
 
-# Patients: 
+# Patients example: 
+SELECT COUNT(*)
+FROM patients_data
+WHERE deathdate IS NULL
+--> Only the death date and prefix column had null values (9999 and 2165 respectively). 
+--> All other columns had 0 null values.
+
+# Immunizations sample: 
+
+
 
 
 
