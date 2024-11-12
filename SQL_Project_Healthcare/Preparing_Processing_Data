@@ -1,4 +1,4 @@
--- 1. Removed irrelevant data for analysis
+-- 1. Removed irrelevant data for analysis by creating a new table for each dataset
 
 CREATE TABLE encounters_data AS
 SELECT id, start, stop, patient, encounterclass, description, base_encounter_cost, total_claim_cost, payer_coverage
@@ -128,8 +128,44 @@ WHERE deathdate IS NULL
 --> Only the death date and prefix column had null values (9999 and 2165 respectively). 
 --> All other columns had 0 null values.
 
-# Immunizations sample: 
+# Immunizations example: 
+SELECT COUNT(*)
+FROM immunizations_data
+WHERE patient IS NULL
+--> No null values are present in all columns. 
 
+# Conditions example: 
+SELECT COUNT(*)
+FROM conditions_data
+WHERE stop IS NULL
+--> 60,563 null values were only present in the stop column. 
+--> No other null values were present in other columns. 
+
+-- 5. Dealt with null values present in the three datasets (Encounters, Patients, Conditions)
+
+# Encounters
+UPDATE encounters_data
+SET description = 'Not Described'
+WHERE description IS NULL
+--> It was important to highlight no description so that efforts can be made to fill this type of information in by health providers. 
+
+# Patients
+ALTER TABLE patients_data
+DROP COLUMN prefix
+--> Null values for the deathdate were not considered problematic as it is unclear if there is a deathdate and therefore did not requiring dealing with. 
+--> Only the prefix column was dropped. 
+
+# Conditions 
+--> Null values for conditions data was not dealt with as it is unclear when treatment ended and if it ended at all. 
+
+-- 6. Renamed columns within the conditions table to better illustrate data within columns
+
+# Conditions
+ALTER TABLE conditions_data
+RENAME start to start_date
+
+ALTER TABLE conditions_data
+RENAME stop to stop_date
 
 
 
