@@ -1,13 +1,13 @@
-# Patients Dataframe:
+---------------------------------------------------- Patients DataFrame ------------------------------------------------------------------
+
 -- 1. What are the demographics of patients?
--- 1.1 Average, Minimum, and Maximum age of individuals
+-- 1.1 Average, Minimum, and Maximum age of individuals plus number of individuals per age group
 SELECT AVG(age), MIN(age), MAX(age)
 FROM patients_data
 --> Average = 45.27
 --> Minimum = 1
 --> Maximum = 111
 
--- 1.2. Number of individuals per age group
 SELECT CASE WHEN age between 0 AND 18 THEN 'Pre-Young Adults'
 WHEN age between 19 and 26 THEN 'Young Adults'
 WHEN age between 27 AND 39 THEN 'Adults'
@@ -26,14 +26,14 @@ END
 --> 1746 Adults 
 --> 1198 Young Adults
 
--- 1.3. Gender of patients
+-- 1.2. Gender of patients
 SELECT gender, COUNT(*) AS NUM
 FROM patients_data
 GROUP BY gender
 --> 11,363 females present in the sample
 --> No males present in the sample
 
--- 1.4. Race 
+-- 1.3. Race 
 SELECT race, COUNT(*) AS NUM
 FROM patients_data
 GROUP BY race
@@ -44,20 +44,68 @@ GROUP BY race
 --> 107 Patients classified themselves as 'Other'
 --> 57 Considered Native
 
--- 1.5. Ethnicity 
+-- 1.4. Ethnicity 
 SELECT race, COUNT(*) AS NUM
 FROM patients_data
 GROUP BY race
 --> 10,149 Nonhispanic individuals
 --> 1214 Hispanic Individuals
 
--- 1.6. Number of Individuals who have died
+-- 1.5. Number of counties the hospital treats individuals from
+SELECT county, COUNT(*)
+FROM patients_data
+GROUP BY county
+--> 14 diverse counties
+
+-- 1.6. Which state, city, county, and zip codes are individuals predominantly based?
+SELECT state, COUNT(*) AS NUM
+FROM patients_data
+GROUP BY state
+--> Individuals are predominantly from the state of Massachusettes
+
+SELECT city, COUNT(*)
+FROM patients_data
+GROUP BY city
+ORDER BY COUNT DESC
+--> Top 3: Boston (1016), Worcester (295), Springfield (244)
+
+SELECT county, COUNT(*)
+FROM patients_data
+GROUP BY county
+ORDER BY COUNT DESC
+--> Top 3: Middlesex County (2571), Worcester County (1332), Essex County (1290)
+
+SELECT zip, COUNT(*) 
+FROM patients_data
+GROUP BY zip
+ORDER BY COUNT DESC
+--> 327 diverse ZIP codes
+--> Top 3 ZIP codes: 2151 (136), 2472 (135) and 2360 (116)
+
+-- 1.7. Average, Minimum, and Maximum Income of Individuals
+SELECT AVG(income), MIN(income), MAX(income)
+FROM patients_data
+--> Average = 119,085.47
+--> Minimum = 23
+--> Maximum = 998,537
+
+-- 1.8. Average, Minimum, and Maximum Healthcare Coverage of Individuals
+SELECT AVG(healthcare_coverage), MIN(healthcare_coverage), MAX(healthcare_coverage)
+FROM patients_data
+--> Average = 552,194.41
+--> Minimum = 0 
+--> Maximum = 7,456,354.98
+
+-- 2. What are the hospital demographics? 
+-- 2.1. Number of Individuals who have died in the hospital
 SELECT COUNT(*)
-from patients_data
+FROM patients_data
 WHERE death date IS NOT NULL
---> 1364 individuals have died within the hospital.
+--> 1364 individuals have died in the hospital.
 
--- 1.7. Number of Individuals the hospital has treated in diverse ZIP codes
-
-
-
+-- 2.2. Average, Minimum, and Maximum Healthcare Expenses of Individuals
+SELECT AVG(healthcare_expenses), MIN(healthcare_expenses), MAX(healthcare_expenses)
+FROM patients_data
+--> Average = 272,690.21 
+--> Minimum = 100 
+--> Maximum = 6,569,036.62
