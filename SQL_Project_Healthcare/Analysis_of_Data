@@ -4,7 +4,7 @@
 SELECT AVG(age), MIN(age), MAX(age)
 FROM patients_data
 --> Average = 45.27
---> Minimum 
+--> Minimum = 1
 --> Maximum = 111
 
 -- 1.2. Number of individuals per age group
@@ -50,3 +50,14 @@ FROM patients_data
 GROUP BY race
 --> 10,149 Nonhispanic individuals
 --> 1214 Hispanic Individuals
+
+-- 1.6. Number of Individuals who have died
+SELECT COUNT(*)
+from patients_data
+WHERE death date IS NOT NULL
+--> 1364 individuals have died within the hospital.
+
+-- 1.7. Number of Individuals the hospital has treated in diverse ZIP codes
+
+
+
