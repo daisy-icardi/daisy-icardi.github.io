@@ -6,9 +6,9 @@ FROM public.encounters
 --> Organization, provider, payer, code and reasoncode columns were removed as they did not elucidate any information viable for analysis.
 
 CREATE TABLE patients_data AS
-SELECT id, birthdate, deathdate, prefix, first, last, race, ethnicity, gender, address, city, state, county, zip, healthcare_expenses, healthcare_coverage, income
+SELECT id, birthdate, deathdate, prefix, first, last, race, ethnicity, gender, city, state, county, zip, healthcare_expenses, healthcare_coverage, income
 FROM public.patients
---> Lat, lon, mrn, fips, ssn, suffix, drivers, passport, birthplace, columns were removed as they did not elucidate any information viable for analysis.
+--> Lat, lon, mrn, fips, ssn, suffix, drivers, passport, address, birthplace, columns were removed as they did not elucidate any information viable for analysis.
 
 CREATE TABLE immunizations_data AS
 SELECT date, patient, description
@@ -43,9 +43,13 @@ SELECT *
 FROM conditions_data
 --> No data types required cleansing. 
 
--- 3. Added columns separating date and time for further analysis
+-- 3. Added columns (including calculated columns) to each data frame for analyzing questions of interest
 
-# Encounters 
+-------------------------------------------------- 3.1. Patients DataFrame ----------------------------------------------------------------
+-- 3.1.1. 
+  
+-------------------------------------------------- 3.2. Encounters DataFrame --------------------------------------------------------------
+-- 3.2.1. Added four columns separating start/stop date and start/stop time 
 ALTER TABLE encounters_data
 ADD start_date DATE,
 ADD start_time TIME,
@@ -54,17 +58,33 @@ ADD stop_time TIME
 
 UPDATE encounters_data
 SET start_date = CAST(start AS DATE)
-
 UPDATE encounters_data
 SET start_time = CAST(start AS TIME)
-
 UPDATE encounters_data
 SET stop_date = CAST(stop AS DATE)
-
 UPDATE encounters_data
 SET stop_time = CAST(stop AS TIME)
 
-# Immunizations
+-- 3.2.2. Added a column calculating the encounter length in time 
+ALTER TABLE encounters_data
+ADD encounter_length time without time zone
+UPDATE encounters_data
+SET encounter_length = stop_time - start_time
+
+-- 3.2.3. Added a column calculating the cost of encounter illness, after accounting for base encounter cost
+ALTER TABLE encounters_data
+ADD cost_of_encounter_problem DOUBLE PRECISION
+UPDATE encounters_data
+SET cost_of_encounter_problem = total_claim_cost - base_encounter_cost
+  
+-- 3.2.4. Added a column calculating the amount patients would be responsible for paying, after accounting for payer coverage of encounter
+ALTER TABLE encounters_data
+ADD patient_pay_responsibility DOUBLE PRECISION
+UPDATE encounters_data
+SET patient_pay_responsibility = total_claim_cost - payer_coverage
+
+-------------------------------------------------- 3.3. Immunizations DataFrame ----------------------------------------------------------
+-- 3.3.1. Added two columns separating date and time
 ALTER TABLE immunizations_data
 RENAME date to date_time
 --> The date column was initially renamed date_time to prevent addition errors with existing column names.
@@ -72,30 +92,44 @@ RENAME date to date_time
 ALTER TABLE immunizations_data
 ADD date DATE,
 ADD time TIME
-
 UPDATE immunizations_data
 SET time = CAST(date_time AS TIME)
-
 UPDATE immunizations_data
 SET date = CAST(date_time AS DATE)
 
--- 3. Checked for duplicates within datasets
+-------------------------------------------------- 3.4. Conditions DataFrame -------------------------------------------------------------
 
+-- 3.4.1. Added a column calculating the length of the treatment condition
+ALTER TABLE conditions_data
+ADD condition_length_days INT
+UPDATE conditions_data
+SET condition_length_days = stop_date - start_date
+
+-- 4. Created 
+
+-- 5. Added newly created columns to existing data frames
+
+-- 6. Checked for duplicates within datasets
+
+# Encounters
 SELECT id, COUNT(*)
 FROM encounters_data
 GROUP BY id
 HAVING COUNT(*) > 1
 
+# Patients
 SELECT id, COUNT(*)
 FROM patients_data
 GROUP BY id
 HAVING COUNT(*) > 1
 
+# Immunizations
 SELECT patient, COUNT(*)
 FROM immunizations_data
 GROUP BY patient
 HAVING COUNT(*) > 1
 
+# Conditions
 SELECT patient, COUNT(*)
 FROM conditions_data
 GROUP BY patient
@@ -112,7 +146,7 @@ FROM conditions_data
 SELECT DISTINCT *
 FROM immunizations_data
 
--- 4. Checked null or blank values within data frames
+-- 5. Checked null or blank values within data frames
 
 # Encounters example:
 SELECT COUNT(*)
