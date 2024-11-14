@@ -83,6 +83,11 @@ ADD patient_pay_responsibility DOUBLE PRECISION
 UPDATE encounters_data
 SET patient_pay_responsibility = total_claim_cost - payer_coverage
 
+-- 3.2.5. Added a column calculating the age of patients during encounter. To this aim, created a table joining patients birthdate and the encounter date
+
+
+
+
 -------------------------------------------------- 3.3. Immunizations DataFrame ----------------------------------------------------------
 -- 3.3.1. Added two columns separating date and time
 ALTER TABLE immunizations_data
@@ -104,6 +109,12 @@ ALTER TABLE conditions_data
 ADD condition_length_days INT
 UPDATE conditions_data
 SET condition_length_days = stop_date - start_date
+
+-- 3.4.2. 
+CREATE TABLE age_of_conditions AS
+SELECT birthdate, start_date
+FROM patients_data
+INNER JOIN conditions_data ON patients_data.id = conditions_data.patient
 
 -- 4. Created 
 
