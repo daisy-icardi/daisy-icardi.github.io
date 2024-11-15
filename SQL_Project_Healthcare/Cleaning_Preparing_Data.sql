@@ -50,8 +50,40 @@ FROM conditions_data
 -- 3. Added columns (including calculated columns) to each data frame for analyzing questions of interest
 
 -------------------------------------------------- 3.1. Patients DataFrame ----------------------------------------------------------------
--- 3.1.1. 
-  
+-- 3.1.1. Added a column calculating the net patient cost by subtracting expenses from coverage of patients 
+
+ALTER TABLE patients_data
+ADD net_patient_cost DOUBLE PRECISION
+
+UPDATE patients_data 
+SET net_patient_cost = healthcare_expenses - healthcare_coverage
+
+-- 3.1.2. As some negative values returned, added a column to categorize whether individuals were overcovered or not
+
+ALTER TABLE patients_data
+ADD overcoverage_flag BOOLEAN
+
+UPDATE patients_data 
+SET overcoverage_flag = CASE
+    WHEN net_patient_cost < 0 THEN TRUE
+    ELSE FALSE
+END
+
+-- 3.1.3. Classed patients' financial burden of healthcare expenses considering their net expense cost, income, and coverage 
+
+ALTER TABLE patients_data
+ADD COLUMN financial_burden_class VARCHAR(20)
+
+UPDATE patients_data
+SET financial_burden_class = CASE
+    WHEN income < 1000 THEN 'Very Low Income'
+    WHEN net_patient_cost < 0 THEN 'Overcoverage'
+    WHEN (net_patient_cost / income) * 100 < 10 THEN 'Low Burden'
+    WHEN (net_patient_cost / income) * 100 BETWEEN 10 AND 50 THEN 'Moderate Burden'
+    WHEN (net_patient_cost / income) * 100 > 50 THEN 'High Burden'
+    ELSE 'Unclassified'
+END
+
 -------------------------------------------------- 3.2. Encounters DataFrame --------------------------------------------------------------
 -- 3.2.1. Added four columns separating start/stop date and start/stop time 
 ALTER TABLE encounters_data
@@ -111,7 +143,7 @@ SET condition_length_days = stop_date - start_date
 
 ------------------------------------------------------------------------------------------------------------------------------------------
 -- 4. Created new data frames calculating the age of patients during hospital encounters, immunizations, and conditions. 
--- To this aim, data frames were merged.
+-- To this aim, data frames were joined.
   
 ---------------------------------------- 4.1. Age of patients during encounter ------------------------------------------------------------
 CREATE TABLE age_of_encounter AS
@@ -255,7 +287,8 @@ FROM immunizations_data
 SELECT COUNT(*)
 FROM patients_data
 WHERE deathdate IS NULL
---> Only the death date and prefix column had null values (9999 and 2165 respectively). 
+--> The death date and prefix column comprised the most null values (9999 and 2165 respectively). 
+--> The encounter_age column had 22 null values, whereas 271 null values were present in the conditions_age column.
 --> All other columns had 0 null values.
 
 -------------------------------------------------- 7.2. Encounters DataFrame --------------------------------------------------------------
@@ -298,15 +331,23 @@ WHERE description IS NULL
 --> It was important to highlight no description so that efforts can be made to fill this type of information in by health providers. 
 
 -------------------------------------------------- 8.3. Conditions DataFrame -------------------------------------------------------------
---> Null values for conditions data were not dealt with as it is unclear when treatment ended and if it ended at all. 
---> Treatment would impact the length of days calculated and thus null values were not dealt with.
---> Null values present in the age at conditions may mean some additional patients were not put into the patient system and thus were not dealt with.
+--> The handling of null values in the conditions data was not addressed due to uncertainty regarding the end of treatment, or whether treatment had ended at all.
+--> Treatment duration affects the calculation of the number of days, and as such, null values were not processed in this column.
+--> Null values in the "age at conditions" data may indicate that some patients were not entered into the system, and consequently, their data was not addressed.
+--> Indeed, Null patient IDs were cross-checked against the patient data frame, and since no corresponding IDs were found, these cases were not processed.
+--> The presence of null values may provide insights into gaps in healthcare system records, highlighting areas where data completeness is lacking.
 ------------------------------------------------------------------------------------------------------------------------------------------
--- 9. Renamed columns within the conditions table to better illustrate data within columns
+-- 9. Renamed columns within certain data frames to better illustrate data within columns
 
-# Conditions
+-------------------------------------------------- 9.1. Patients DataFrame ----------------------------------------------------------------
+
+ALTER TABLE patients_data
+RENAME id to patient
+
+-------------------------------------------------- 9.2. Conditions DataFrame -------------------------------------------------------------
 ALTER TABLE conditions_data
 RENAME start to start_date
 
 ALTER TABLE conditions_data
 RENAME stop to stop_date
+--> Note, that this was done prior to joining the data frames above (i.e., age of encounter, conditions, and immunizations).
