@@ -302,13 +302,35 @@ Findings:
 --> Psychiatric Assessment with Mental Health Assessment was the least common description encounter (1)
 --> Surgery was equally the least common description encounter (1)
 -------------------------------------------------------------------------------------------------------------------------------------------
--- 2.2.5. Which encounter class is most frequent across the dataset?
+-- 2.2.5. Which encounter class and description is associated with the highest and lowest costs?
+-------------------------------------------------------------------------------------------------------------------------------------------
+# Highest
+SELECT 
+    encounterclass, 
+    description, 
+    cost_of_encounter_problem
+FROM encounters_data
+GROUP BY encounterclass, description, cost_of_encounter_problem
+ORDER BY cost_of_encounter_problem DESC
+Findings: 
+--> Hospital Encounter with Problem was the highest costing encounter description with emergency as encounterclass (1470203.92)
+
+# Lowest
+SELECT 
+    encounterclass, 
+    description, 
+    cost_of_encounter_problem
+FROM encounters_data
+GROUP BY encounterclass, description, cost_of_encounter_problem
+ORDER BY cost_of_encounter_problem ASC
+Findings: 
+--> In the top 35 results costing patients 0, the ambulatory encounter class was the most common (13 encounter results as 0) with no common descriptions.
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 2.2.6.
 -------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------------
--- 2.2.2. Which encounter class is most frequent across the dataset?
--------------------------------------------------------------------------------------------------------------------------------------------
--------------------------------------------------------------------------------------------------------------------------------------------
--- 2.2.2. Which encounter class is most frequent across the dataset?
+-- 2.2.7. 
 -------------------------------------------------------------------------------------------------------------------------------------------
 
 
