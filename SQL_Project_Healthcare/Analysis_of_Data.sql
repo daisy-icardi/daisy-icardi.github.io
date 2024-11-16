@@ -24,7 +24,7 @@ FROM patients_data
 
 Findings:
 # Encounters:
---> Average = 39.54, Minimum = 0, Maximum = 109
+--> Average = 39.54, Minimum = 30, Maximum = 109
 
 # Immunizations:
 --> Average = 32.20, Minimum = 0, Maximum = 100
@@ -239,7 +239,7 @@ Findings:
 -------------------------------------------------------------------------------------------------------------------------------------------
 -- 2.2. Categorical Data Analysis
 -------------------------------------------------------------------------------------------------------------------------------------------
--- 2.1.5. What are the encounter classes and descriptions correspond to the longest and shortest patient encounter lengths?
+-- 2.2.1. What are the encounter classes and descriptions correspond to the longest and shortest patient encounter lengths?
 -------------------------------------------------------------------------------------------------------------------------------------------
 SELECT 
     encounterclass,
@@ -255,6 +255,66 @@ ORDER BY
     max_encounter_length DESC
 Findings: 
 --> In the first top 10 longest patient encounters, inpatient encounters seem to be the most common encounterclass.
---> Treatment for substance use disorder and withdrawal 
+--> Treatment for substance use disorder and withdrawal was the lengthiest inpatient encounter. 
+--> In the top 10 shorted patient encounters, inpatient encounters also seem to be the most common encounterclass. 
+--> Follow-up appointments, Hospitalization for Observations, Move to lower-level care units, and Ward Admissions were the descriptions of encounters taking the shortest amount of time.
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 2.2.2. Which encounter class is most/least frequent across the dataset?
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT encounterclass, COUNT(*) AS encounter_count
+FROM encounters_data
+GROUP BY encounterclass
+ORDER BY encounter_count DESC
+Findings: 
+--> Ambulatory encounters were the most frequent with 244148 encounters, followed by outpatient encounters (85849) and wellness (77849).
+--> Virtual encounters were the least frequent with 709 encounters. 
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 2.2.3. What are the most common encounter classes for patients of different age groups?
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+CASE WHEN encounter_age between 0 AND 18 THEN 'Pre-Young Adults'
+WHEN encounter_age between 19 and 26 THEN 'Young Adults'
+WHEN encounter_age between 27 AND 39 THEN 'Adults'
+WHEN encounter_age between 40 AND 65 THEN 'Middle-Aged Adults'
+ELSE 'Old Adults' 
+END AS age_group,encounterclass,
+    COUNT(*) AS encounter_count
+FROM encounters_data
+GROUP BY age_group, encounterclass
+ORDER BY age_group, encounter_count DESC
+Findings:
+--> Adults = Ambulatory (19969), followed by outpatient and wellness. 
+--> Middle-aged adults = ambulatory (139756), followed by outpatient and wellness. 
+--> Old Adults = ambulatory (84423), followed by outpatient and wellness. 
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 2.2.4. Which encounter description is most frequent across the dataset?
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT  
+    description, 
+    COUNT(*) AS encounter_count
+FROM encounters_data
+GROUP BY description
+ORDER BY encounter_count DESC
+Findings: 
+--> Hospital encounter with a problem was the most common description encounter: 125693
+--> Overall assessment of patient followed with 51840 encounters
+--> Psychiatric Assessment with Mental Health Assessment was the least common description encounter (1)
+--> Surgery was equally the least common description encounter (1)
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 2.2.5. Which encounter class is most frequent across the dataset?
+-------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 2.2.2. Which encounter class is most frequent across the dataset?
+-------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 2.2.2. Which encounter class is most frequent across the dataset?
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
 
 
