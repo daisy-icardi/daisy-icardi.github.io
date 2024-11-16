@@ -186,8 +186,75 @@ SELECT COUNT(*)
 FROM patients_data
 WHERE death date IS NOT NULL
 --> 1364 individuals.
-
 -------------------------------------------------------------------------------------------------------------------------------------------
-
 ---------------------------------------------------- 2. Encounters DataFrame --------------------------------------------------------------
--- 2.1.1. 
+-- 2.1. Temporal Analysis of Encounters
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 2.1.1. What are the earliest and latest dates recorded in the dataset for encounters?
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    MIN(start_date) AS earliest_date,
+    MAX(stop_date) AS latest_date
+FROM encounters_data
+Findings: 
+--> Earliest: 2015-01-01, Latest: 2023-06-19
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 2.1.2. What year had the most encounters versus the least encounters?
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    EXTRACT(YEAR FROM start_date) AS encounter_year,
+    COUNT(*) AS total_encounters
+FROM 
+    encounters_data
+GROUP BY 
+    EXTRACT(YEAR FROM start_date)
+ORDER BY 
+    total_encounters DESC
+Findings: 
+--> Year 2021 with 67612 encounters had the most encounters. Year 2023 had the least amount of encounters with 23840 encounters
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 2.1.3. Which hour of the day sees the peak volume of patient encounters in the analyzed records?
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    EXTRACT(HOUR FROM start_time) AS encounter_hour,
+    COUNT(*) AS total_encounters
+FROM 
+    encounters_data
+GROUP BY 
+    EXTRACT(HOUR FROM start_time)
+ORDER BY 
+    total_encounters DESC
+Findings: 
+--> 10 pm (21286) sees the most patient encounters, followed by 7 am (20254) and 8 pm (20157). 
+--> 2 am sees the least patient encounters (16945 encounters).
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 2.1.4. What is the average, maximum, and minimum length of encounters?
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT AVG(encounter_length) AS avg_length,
+MIN(encounter_length) AS min_length,
+MAX(encounter_length) AS max_length
+FROM encounters_data
+Findings: 
+--> Average = 1h 31 mins 21 seconds, Min = 0, Max = 23 hours, 59 mins, 38 seconds
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 2.2. Categorical Data Analysis
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 2.1.5. What are the encounter classes and descriptions correspond to the longest and shortest patient encounter lengths?
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    encounterclass,
+    description,
+    MAX(encounter_length) AS max_encounter_length,
+    MIN(encounter_length) AS min_encounter_length,
+    AVG(encounter_length) AS avg_encounter_length
+FROM 
+    encounters_data
+GROUP BY 
+    encounterclass, description
+ORDER BY 
+    max_encounter_length DESC
+Findings: 
+--> In the first top 10 longest patient encounters, inpatient encounters seem to be the most common encounterclass.
+--> Treatment for substance use disorder and withdrawal 
+
+
