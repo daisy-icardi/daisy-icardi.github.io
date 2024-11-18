@@ -237,6 +237,34 @@ FROM encounters_data
 Findings: 
 --> Average = 1h 31 mins 21 seconds, Min = 0, Max = 23 hours, 59 mins, 38 seconds
 -------------------------------------------------------------------------------------------------------------------------------------------
+-- 2.1.5. What are the net patient cost trends after accounting for coverage over the years?
+-------------------------------------------------------------------------------------------------------------------------------------------
+WITH yearly_costs AS (
+    SELECT 
+        EXTRACT(YEAR FROM start_date) AS year,  
+        AVG(patient_pay_responsibility) AS avg_out_of_pocket_cost, 
+        MIN(patient_pay_responsibility) AS min_out_of_pocket_cost, 
+        MAX(patient_pay_responsibility) AS max_out_of_pocket_cost  
+    FROM encounters_data
+    WHERE start_date BETWEEN '2015-01-01' AND '2023-12-31'  
+    GROUP BY EXTRACT(YEAR FROM start_date) 
+)
+SELECT 
+    year,
+    avg_out_of_pocket_cost,
+    min_out_of_pocket_cost,
+    max_out_of_pocket_cost,
+    LAG(avg_out_of_pocket_cost) OVER (ORDER BY year) AS previous_year_avg,
+    CASE
+        WHEN avg_out_of_pocket_cost > LAG(avg_out_of_pocket_cost) OVER (ORDER BY year) THEN 'Increased'
+        WHEN avg_out_of_pocket_cost < LAG(avg_out_of_pocket_cost) OVER (ORDER BY year) THEN 'Decreased'
+        ELSE 'No Change'
+    END AS cost_trend  
+FROM yearly_costs
+ORDER BY year;
+Findings: 
+--> 2015 to 2016 = decreased, 2016-2017 = increased, 2017-2018 = decreased, 2018-2019 = increased, 2019-2020 = decreased, 2020-2021 = decreased, 2021-2022 = increased, 2022-2023 = decreased
+-------------------------------------------------------------------------------------------------------------------------------------------
 -- 2.2. Categorical Data Analysis
 -------------------------------------------------------------------------------------------------------------------------------------------
 -- 2.2.1. What are the encounter classes and descriptions correspond to the longest and shortest patient encounter lengths?
@@ -327,11 +355,45 @@ Findings:
 --> In the top 35 results costing patients 0, the ambulatory encounter class was the most common (13 encounter results as 0) with no common descriptions.
 
 -------------------------------------------------------------------------------------------------------------------------------------------
--- 2.2.6.
+-- 2.2.6. Which descriptions are associated with follow-up appointments?
 -------------------------------------------------------------------------------------------------------------------------------------------
--------------------------------------------------------------------------------------------------------------------------------------------
--- 2.2.7. 
--------------------------------------------------------------------------------------------------------------------------------------------
+WITH initial_and_followup_encounters AS (
+    SELECT 
+        p1.patient AS initial_patient_id,
+        p1.description AS initial_description,
+        p2.description AS followup_description,
+        p1.start_date AS initial_date,
+        p2.start_date AS followup_date
+    FROM encounters_data p1
+    JOIN encounters_data p2 
+        ON p1.patient = p2.patient 
+        AND p2.start_date > p1.start_date  
+    WHERE 
+        (
+            p2.description = 'Follow-up appointment' 
+            OR p2.description = 'Follow-up appointment after childbirth' 
+            OR p2.description = 'Follow-up appointment after surgery (observation)' 
+            OR p2.description = 'Follow-up Assessment of Allergic Conditions'
+        )
+        AND (
+            p1.description != 'Follow-up appointment' 
+            AND p1.description != 'Follow-up appointment after childbirth' 
+            AND p1.description != 'Follow-up appointment after surgery (observation)' 
+            AND p1.description != 'Follow-up Assessment of Allergic Conditions'
+        )
+)
+SELECT 
+    initial_description,
+    COUNT(*) AS followup_count
+FROM initial_and_followup_encounters
+GROUP BY initial_description
+ORDER BY followup_count DESC;
+Findings: 
+--> Hospital encounters with a problem were associated with follow-up appointments the most with 118611 encounters.
+--> Prenatal Care followed with 62843 encounters, Overall assessment of patient (50923), Check-up (31788) and Urgent Care (22334)
+--> Psychiatric Assessment with Mental Health Assessment was the least associated description for follow-up appointments (2 encounters)
+
+
 
 
 
