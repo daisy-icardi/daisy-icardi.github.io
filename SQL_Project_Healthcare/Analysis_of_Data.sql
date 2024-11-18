@@ -393,9 +393,26 @@ Findings:
 --> Prenatal Care followed with 62843 encounters, Overall assessment of patient (50923), Check-up (31788) and Urgent Care (22334)
 --> Psychiatric Assessment with Mental Health Assessment was the least associated description for follow-up appointments (2 encounters)
 
-
-
-
+-------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------- 3. Conditions DataFrame --------------------------------------------------------------
+3.1. Categorical Analysis 
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 3.1.1. Which conditions are most associated with encounter descriptions of Hospital Encounters with Problems?
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    c.description,  
+    COUNT(*) AS condition_count 
+FROM encounters_data e
+JOIN conditions_data c
+    ON e.patient = c.patient  
+    AND e.start_date = c.start_date 
+WHERE e.description = 'Hospital Encounter with Problem'  
+GROUP BY c.description 
+ORDER BY condition_count DESC
+Findings:
+--> Nonspecific (abnormal) findings on radiological and other examination of other intrathoracic organs was the most common condition associated (439)
+--> Anemia followed whether unspecified or specified (327 and 327 respectively).
+--> Pregnant state (incidental) was the fourth most commonly associated condition associated with hospital encounters with problems (261)
 
 
 
