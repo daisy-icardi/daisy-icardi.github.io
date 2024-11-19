@@ -41,19 +41,19 @@ WHEN encounter_age between 19 and 26 THEN 'Young Adults'
 WHEN encounter_age between 27 AND 39 THEN 'Adults'
 WHEN encounter_age between 40 AND 65 THEN 'Middle-Aged Adults'
 ELSE 'Old Adults' END age_groups, COUNT(*)
-from patients_data
+from encounters_data
 GROUP BY age_groups
 ORDER BY COUNT(*) DESC
 
 Findings:
 # Encounters 
---> 3957 Middle-Aged Adults, 2698 Pre-Young Adults, 1724 Old Adults, 1694 Adults and 1290 Young Adults
+--> 258167 Middle-Aged Adults, 158737 Old Adults and 39031 Adults
 
 # Immunizations
---> 3923 Middle-Aged Adults, 3750 Pre-Young Adults, 1847 Adults, 1071 Adults and 772 Old Adults
+--> 67217 Middle-Aged Adults, 46350 Pre-Young Adults, 21370 Adults, 20355 Old Adults and 10201 Young Adults
 
 # Conditions
---> 4310 Pre-Young Adults, 2279 Adults, 2238 Middle-Aged Adults, 2127 Young Adults and 409 Old Adults
+--> 61965 Middle-Aged Adults, 35723 Adults, 23045 Young Adults, 22133 Pre-Young Adults, and 21119 Old Adults 
 -------------------------------------------------------------------------------------------------------------------------------------------
 -- 1.1.3 What is the gender of patients?
 -------------------------------------------------------------------------------------------------------------------------------------------
@@ -532,8 +532,134 @@ Findings:
 4. Fever, unspecified (609)
 5. Anemia, unspecified and specified (575 and 575)
 -------------------------------------------------------------------------------------------------------------------------------------------
+-- 3.2.6. How does the prevalence of specific conditions change across age groups?
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    age_groups, 
+    description,  
+    COUNT(*) AS num_individuals 
+FROM (
+    SELECT 
+        description,  
+        CASE 
+            WHEN conditions_age BETWEEN 0 AND 18 THEN 'Pre-Young Adults'
+            WHEN conditions_age BETWEEN 19 AND 26 THEN 'Young Adults'
+            WHEN conditions_age BETWEEN 27 AND 39 THEN 'Adults'
+            WHEN conditions_age BETWEEN 40 AND 65 THEN 'Middle-Aged Adults'
+            ELSE 'Old Adults' 
+        END AS age_groups  
+    FROM 
+        conditions_data
+) subquery  
+GROUP BY 
+    age_groups, description  
+ORDER BY 
+    num_individuals DESC
+Findings: 
+--> All age groups were most associated with the condition 'other psychological or physical stress, not elsewhere classified'. 
+--> The condition was most associated with middle-aged adults, followed by adults and young adults, and least associated with pre-young adults.
+--> Pregnant state incidental was the second most associated condition among all age groups. 
 
-
+-------------------------------------------------- 4. Immunizations DataFrame --------------------------------------------------------------
+-- 4.1. Temporal Analysis of Immunizations
+--------------------------------------------------------------------------------------------------------------------------------------------
+-- 4.1.1. What are the earliest and latest dates recorded in the dataset for immunizations?
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    MIN(date) AS earliest_date,
+    MAX(date) AS latest_date
+FROM immunizations_data
+Findings: 
+--> Earliest: 1945-03-23, Latest: 2023-06-08
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 4.1.2. Which year recorded the highest/lowest number of reported immunizations?
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    EXTRACT(YEAR FROM date) AS immunization_year,
+    COUNT(*) AS total_immunizations
+FROM 
+   immunizations_data
+GROUP BY 
+    EXTRACT(YEAR FROM date)
+ORDER BY 
+    total_immunizations DESC
+Findings: 
+--> 2021 had the highest number of reported immunizations (28,009)
+--> This was followed by 2020 (14,327), 2014 (14,209), 2015 (14,098) and 2022 (14,074)
+--> 1946 had the lowest number of reported immunizations (6)
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 4.1.3. Which hour of the day sees the peak volume of patient immunizations in the analyzed records?
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    EXTRACT(HOUR FROM time) AS immunization_hour,
+    COUNT(*) AS total_immunizations
+FROM 
+    immunizations_data
+GROUP BY 
+    EXTRACT(HOUR FROM time)
+ORDER BY 
+    total_immunizations DESC
+Findings: 
+--> 8 pm was the time in which peak volume of immunizations occurred (7594)
+--> 10 pm (7480), 7 am (7330), 2 pm (7188) and 5 am (7173) followed
+--> Noon was the time in which the least immunizations occurred (6280)
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 4.1.4. Are there seasonal trends in vaccination (e.g., flu vaccines in fall/winter)?
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    TO_CHAR(date, 'Month') AS vaccination_month,  -- Extract the month name
+    COUNT(*) AS vaccination_count  -- Count the number of vaccinations in each month
+FROM 
+    immunizations_data
+WHERE 
+    description = 'Seasonal Flu Vaccine'  -- Focus on flu vaccines (optional, adjust for specific vaccine)
+GROUP BY 
+    TO_CHAR(date, 'Month'), 
+    EXTRACT(MONTH FROM date)  -- Group by month and its numeric value for sorting
+ORDER BY 
+    EXTRACT(MONTH FROM date)
+Findings: 
+--> March and April had the highest influx of vaccinations (9375 and 8100)
+--> May (7891) February (7858) and August (7703) followed 
+--> November had the lowest influx of seasonal flu vaccinations (7286)
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 4.2. Categorical Analysis of Immunizations
+--------------------------------------------------------------------------------------------------------------------------------------------
+-- 4.2.1. Which immunizations are most associated with the year 2021? 
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    description, 
+    COUNT(*) AS frequency  
+FROM 
+    immunizations_data
+WHERE 
+    EXTRACT(YEAR FROM date) = 2020 
+GROUP BY 
+    description  
+ORDER BY 
+    frequency DESC
+Findings: 
+--> Seasonal flu vaccine (8498)
+--> Five doses of tetanus toxoid, preservative-free and adsorbed, for adults (844) and Diphtheria, Tetanus, and Pertussis Vaccine followed (675)
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 4.2.2. What are the top 5 most frequent immunizations in the dataset across all the years?
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    description,  
+    COUNT(*) AS frequency  
+FROM 
+    immunizations_data  
+GROUP BY 
+    description  
+ORDER BY 
+    frequency DESC 
+LIMIT 5  
+Findings:
+1. Seasonal Flu Vaccine (93219)
+2. Five doses of tetanus toxoid, preservative-free and adsorbed, for adults (8434)
+3. Novel Coronavirus (COVID-19) mRNA Vaccine 30 mcg/0.3mL Dose (7563)
+4. Diphtheria, Tetanus, and Pertussis Vaccine (6693)
+5. Novel Coronavirus (COVID-19) mRNA Vaccine 100 mcg/0.5mL Dose (5993)
 
 
 
