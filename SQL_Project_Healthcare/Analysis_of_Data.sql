@@ -389,15 +389,114 @@ FROM initial_and_followup_encounters
 GROUP BY initial_description
 ORDER BY followup_count DESC;
 Findings: 
---> Hospital encounters with a problem were associated with follow-up appointments the most with 118611 encounters.
+--> Hospital encounters with a problem were most associated with follow-up appointments with 118611 encounters.
 --> Prenatal Care followed with 62843 encounters, Overall assessment of patient (50923), Check-up (31788) and Urgent Care (22334)
 --> Psychiatric Assessment with Mental Health Assessment was the least associated description for follow-up appointments (2 encounters)
 
 -------------------------------------------------------------------------------------------------------------------------------------------
 ---------------------------------------------------- 3. Conditions DataFrame --------------------------------------------------------------
-3.1. Categorical Analysis 
+-- 3.1. Temporal Analysis of Conditions
 -------------------------------------------------------------------------------------------------------------------------------------------
--- 3.1.1. Which conditions are most associated with encounter descriptions of Hospital Encounters with Problems?
+-- 3.1.1. What are the earliest and latest dates recorded in the dataset for conditions?
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    MIN(start_date) AS earliest_date,
+    MAX(stop_date) AS latest_date
+FROM conditions_data
+Findings: 
+--> Earliest: 1914-01-08, Latest: 2023-06-07
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 3.1.2. Which year recorded the highest/lowest number of reported conditions?
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    EXTRACT(YEAR FROM start_date) AS condition_year,
+    COUNT(*) AS total_conditions
+FROM 
+   conditions_data
+GROUP BY 
+    EXTRACT(YEAR FROM start_date)
+ORDER BY 
+    total_conditions DESC
+Findings: 
+1. Year 2020 was the highest recorded year for conditions (10448)
+2. 2014 followed with 9649 reported conditions 
+3. 2021 had 9495 conditions 
+4. 2016 had 7722 conditions
+5. 2017 had 7713 conditions
+--> Years 1914 and 1915 had the lowest number of reported conditions (2)
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 3.1.3. What is the average, maximum, and minimum length of stay within the hospital for conditions? 
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT AVG(condition_length_days) AS avg_length,
+MIN(condition_length_days) AS min_length,
+MAX(condition_length_days) AS max_length
+FROM conditions_data
+Findings: 
+--> Average = 522.68 days, Min = 0, Max = 26,841 days
+-------------------------------------------------------------------------------------------------------------------------------------------
+3.2. Categorical Analysis 
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 3.2.1. Which conditions are associated with the shortest and longest stay within the hospital?
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    description,
+    MAX(condition_length_days) AS max_condition_length,
+    MIN(condition_length_days) AS min_condition_length,
+    AVG(condition_length_days) AS avg_condition_length
+FROM 
+    conditions_data
+GROUP BY 
+    description
+ORDER BY 
+    max_condition_length DESC
+Findings: 
+--> Chronic sinusitis (disorder) was the condition that was associated with the longest stay (26,841 days)
+--> Chronic kidney disease, Stage I followed by a maximum of 19,110 days spent in the hospital 
+--> Bacteremia was the condition associated with no days spent within the hospital (0)
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 3.2.2. Which conditions are most associated with the year 2020?
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    description, 
+    COUNT(*) AS frequency  
+FROM 
+    conditions_data
+WHERE 
+    EXTRACT(YEAR FROM start_date) = 2020 
+GROUP BY 
+    description  
+ORDER BY 
+    frequency DESC
+Findings: 
+--> Other psychological or physical stress, not elsewhere classified was the most associated (2630)
+--> Pregnant state, incidental followed (803)
+--> Esophageal reflux was among the other 15 conditions that were only present once within the year 2020.
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 3.2.3. What are the top 10 most frequent medical conditions patients present with, in the dataset across all the years?
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    description,  
+    COUNT(*) AS frequency  
+FROM 
+    conditions_data  
+GROUP BY 
+    description  
+ORDER BY 
+    frequency DESC 
+LIMIT 10   
+Findings:
+1. Other psychological or physical stress, not elsewhere classified was the most frequent (58962 patients)
+2. Pregnant state, incidental (9872)
+3. Acute bronchitis (5684)
+4. Body Mass Index 30.0-30.9 adult (5461) 
+5. Unemployment (4717)
+6. Other specified anemias (3704)
+7. Anemia, unspecified (3704)
+8. Unspecified essential hypertension (3682)
+9. Other chronic pain (2727)
+10. Tubal ligation status (2537)
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 3.2.4. Which conditions are most associated with encounter descriptions of Hospital Encounters with Problems?
 -------------------------------------------------------------------------------------------------------------------------------------------
 SELECT 
     c.description,  
@@ -410,10 +509,29 @@ WHERE e.description = 'Hospital Encounter with Problem'
 GROUP BY c.description 
 ORDER BY condition_count DESC
 Findings:
---> Nonspecific (abnormal) findings on radiological and other examination of other intrathoracic organs was the most common condition associated (439)
+--> Nonspecific (abnormal) findings on radiological and other examinations of other intrathoracic organs were the most common condition associated (439)
 --> Anemia followed whether unspecified or specified (327 and 327 respectively).
 --> Pregnant state (incidental) was the fourth most commonly associated condition associated with hospital encounters with problems (261)
-
+-------------------------------------------------------------------------------------------------------------------------------------------
+-- 3.2.5. Which conditions are most associated with ambulatory encounter classes?
+-------------------------------------------------------------------------------------------------------------------------------------------
+SELECT 
+    c.description,  
+    COUNT(*) AS condition_count 
+FROM encounters_data e
+JOIN conditions_data c
+    ON e.patient = c.patient  
+    AND e.start_date = c.start_date 
+WHERE e.encounterclass = 'ambulatory'  
+GROUP BY c.description
+ORDER BY condition_count DESC
+Findings: 
+1. Pregnant state, incidental was the most associated with ambulatory encounterclasses (5241)
+2. Acute bronchitis followed (3069)
+3. Streptococcal sore throat (860)
+4. Fever, unspecified (609)
+5. Anemia, unspecified and specified (575 and 575)
+-------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
