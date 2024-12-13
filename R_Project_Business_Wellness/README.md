@@ -1,5 +1,6 @@
 ## <p style="text-align:center"> How can Bellabeat play it _smart_? </p>
-![Alt text of the image](https://github.com/username/repository/blob/master/img/octocat.png)
+![Company Logo]![bellabeat](https://github.com/user-attachments/assets/cad5c22d-40d3-49a2-b860-32968deb1c6c)
+
 
 ## **Phase I: The Business Task**
 The mission of the data analytics team, encompassing six members, is to analyse how individuals are using non-Bellabeat smart devices. 
