@@ -1,5 +1,5 @@
 ## <p style="text-align:center"> How can Bellabeat play it _smart_? </p>
-![Company Logo]![bellabeat](https://github.com/user-attachments/assets/cad5c22d-40d3-49a2-b860-32968deb1c6c)
+![bellabeat](https://github.com/user-attachments/assets/cad5c22d-40d3-49a2-b860-32968deb1c6c)
 
 
 ## **Phase I: The Business Task**
