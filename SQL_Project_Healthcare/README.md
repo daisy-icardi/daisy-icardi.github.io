@@ -1,7 +1,9 @@
-### Overview
+### Project Overview
 This project analyzed healthcare data across patient conditions, encounters, and immunizations to uncover key trends and insights. The dataset spans a century of healthcare records, allowing for both temporal and categorical analyses.
 
-### Data Understanding
+### Data Understanding: All about the Data Source
+The dataset used in this analysis originates from Synthea, an open-source synthetic healthcare data generator, which provides extensive records of healthcare encounters, conditions, and patient demographics. However, the version of the dataset analyzed here was sourced from "Data Wizardry," where the SNOMED codes have been removed to ensure compliance with potential legal and ethical considerations regarding the representation of specific procedural codes. The dataset includes millions of unique patient records and spans over a century of data. Notable features include patient demographics, encounter details, conditions reported, and immunization history. The link to the datasets used can be found here https://datawizardry.academy/sql-basics-healthcare/ if one provides their email. 
+
 The dataset used in this analysis is based on Synthea, an open-source synthetic healthcare data generator, which provides extensive records of healthcare encounters, conditions, and patient demographics (Click Here). The dataset includes millions of unique patient records and spans over a century of data. Notable features of the datasets include patient demographics, encounter details, conditions reported, and immunization history. Key findings from the patient data reveal that the average age of patients is 39.2 years, with the largest group being adults aged 27–39. The dataset also shows that middle-aged adults (ages 40–65) represent a significant proportion of patients, and older adults (over 65) follow closely behind. The most common patient sex in the dataset was female, comprising 100% of records. 
 
 ### Key Insights 
