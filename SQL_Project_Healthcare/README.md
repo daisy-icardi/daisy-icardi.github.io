@@ -6,9 +6,11 @@ The dataset used in this analysis originates from Synthea, an open-source synthe
 
 ### Key Insights 
 #### Patients Registered Data Insights
-Analysis of the patient data reveals that the average age of registered patients is 39.2 years, with middle-aged adults (aged 40–65) comprising the largest demographic. Hospital encounters are most frequent among middle-aged and older adults (over 65), while pre-young adults (<18 years) and adults (aged 18–39) account for a significant proportion of reported conditions. Immunizations are most commonly sought by middle-aged adults and pre-young adults. Additionally, the dataset indicates that 100% of the registered patients are female.
+Analysis of the patient data reveals that the average age of registered patients is 39.2 years, with middle-aged adults (aged 40–65) comprising the largest demographic. Hospital encounters are most frequent among middle-aged and older adults (over 65), while pre-young adults (<18 years) and adults (aged 27–39) account for a significant proportion of reported conditions. Immunizations are most commonly sought by middle-aged adults and pre-young adults. 
 
-Key insights were derived from investigations into which types of encounter classes were most common and how hospital stays and ambulatory care visits varied over time. Additionally, we examined what the most frequent medical conditions were, particularly which ones were associated with the longest and shortest hospital stays. How did psychological stress-related conditions and pregnancy-related conditions vary across different age groups? We also explored the timing of seasonal flu vaccinations, particularly whether there were any delays in immunization trends related to the flu season, especially in regions like Massachusetts. These questions provided insights into healthcare behaviors and trends across various demographic and clinical factors.
+The dataset further indicates that 100% of registered patients are female, 82.2% identify as White, and 89.32% are non-Hispanic. Of the 11,363 patients registered, 12% are deceased.
+
+Regardless of registration status, most patients—based on the combined totals across datasets—are from Boston and Middlesex County in Massachusetts. 
 
 #### Conditions Data Insights
 The year 2020 recorded the highest number of reported conditions (10,448), driven by the pandemic, while 1914 and 1915 had the lowest (2). Chronic sinusitis was associated with the longest hospital stays (up to 26,841 days), while conditions like bacteremia showed no recorded hospital stay, indicating outpatient management.
@@ -17,6 +19,8 @@ Psychological stress was the most common condition across all age groups, with p
 
 #### Encounter Data Insights
 Encounters with problems were most often associated with nonspecific radiological findings and anemia, while pregnancy-related conditions and acute bronchitis were more common in ambulatory visits. This data highlighted significant patterns in healthcare interactions based on condition type and encounter class.
+
+Key insights were derived from investigations into which types of encounter classes were most common and how hospital stays and ambulatory care visits varied over time. Additionally, we examined what the most frequent medical conditions were, particularly which ones were associated with the longest and shortest hospital stays. How did psychological stress-related conditions and pregnancy-related conditions vary across different age groups? We also explored the timing of seasonal flu vaccinations, particularly whether there were any delays in immunization trends related to the flu season, especially in regions like Massachusetts. These questions provided insights into healthcare behaviors and trends across various demographic and clinical factors.
 
 ### Immunization Data Insights
 Immunization trends showed a peak in 2021, with COVID-19 vaccines driving the highest volume, while 1946 had the lowest number of immunizations. There was a clear seasonal pattern in flu vaccinations, peaking in March and April, and showing a delayed trend in Massachusetts, likely due to the state's winter flu season (January to March). The Seasonal Flu Vaccine was the most frequently administered, followed by COVID-19 vaccines.
