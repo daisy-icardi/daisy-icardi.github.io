@@ -39,7 +39,7 @@ Collectively, it is clear the data source would be considered of low quality. Th
 
 ## **2. Project Findings and Recommendations for Bellabeat**
 
-### 1. Drive Feature Adoption
+### 2.1. Drive Feature Adoption
 
 #### Weight Tracking:
 Although 88% of users engage with activity tracking, only a small portion use the weight tracking feature, even though it is used more consistently than heart rate tracking. Most users report weight manually (62.5%), with more reports in the evening. To increase adoption, Bellabeat should highlight the advanced insights of the smart scales, such as body fat and muscle mass, and emphasize the convenience of personalized progress reports and goal-setting tools. Campaigns should target health-conscious individuals with messages about holistic weight management.
@@ -47,7 +47,7 @@ Although 88% of users engage with activity tracking, only a small portion use th
 #### Heart Rate Tracking:
 Heart rate tracking had high interest but lower consistent usage. Stress was found to be highest on Saturdays, particularly in the afternoon. Bellabeat can leverage this by promoting its heart rate variability and stress-relief exercises, particularly on weekends. Digital ads, app notifications, and targeted campaigns can encourage engagement during these peak stress periods.
 
-### 2. Boosting Engagement
+### 2.2. Boosting Engagement
 
 #### Activity Tracking:
 Many users did not meet their step and activity goals, with Thursdays being a particularly low-engagement day. Bellabeat can target low-activity days with personalized content like “Move More Today” and introduce gamification features such as daily challenges, milestone rewards, and social competitions. Social media campaigns can foster accountability, emphasizing community participation and progress.
@@ -55,7 +55,7 @@ Many users did not meet their step and activity goals, with Thursdays being a pa
 #### Sleep Tracking:
 With 58% of users classified as poor sleepers, most wore the device less than half the night. To increase engagement, Bellabeat should emphasize the benefits of longer wear time and the impact of sleep efficiency. Campaigns could focus on “Better Sleep Starts Here” and highlight the role of the device in improving sleep quality, alongside promoting the lightweight design for more comfortable night-time wear.
 
-### 3. Personalized Engagement
+### 2.3. Personalized Engagement
 
 #### Notifications and Reminders:
 Users track specific health data on set days (e.g., weight on Mondays, activity on Tuesdays). Customizing notifications based on user behavior will encourage consistent tracking. For instance, sending reminders for weight tracking on Mondays and offering motivational prompts on Tuesdays for activity can drive engagement. Ads should showcase how Bellabeat adapts to individual routines for a personalized experience.
@@ -63,12 +63,12 @@ Users track specific health data on set days (e.g., weight on Mondays, activity 
 #### Tracking Optimization:
 Weight is typically tracked in the evening, and activity in the morning. Optimizing syncing during these times ensures a smooth experience. Bellabeat can promote the app's seamless syncing features to reduce friction and encourage more consistent tracking.
 
-### 4. Usability and Integration
+### 2.4. Usability and Integration
 
 #### Streamlined User Experience:
 Users engage with their devices mostly for activity tracking but less so for sleep tracking, particularly during the night. Bellabeat can improve wearability and automate data entry for sleep tracking to encourage more consistent use. Integration with popular apps like Google Fit or Apple Health can be promoted to tech-savvy users, positioning Bellabeat as a central hub for health data.
 
-### 5. Consistency Incentives
+### 2.5. Consistency Incentives
    
 #### Subscription Model:
 With 50% of users classified as overweight, offering premium features like advanced sleep, stress, and activity insights through a subscription plan would provide added value. A free trial can be offered to showcase the benefits, and campaigns should highlight how these insights can aid in weight management and overall wellness.
@@ -76,10 +76,10 @@ With 50% of users classified as overweight, offering premium features like advan
 #### Community Engagement:
 Weekly challenges and sharing milestones on social media will help create a sense of community. Referral programs and social media campaigns can amplify word-of-mouth marketing, encouraging users to share their progress and feel part of a larger health-focused community.
 
-### 6. Targeting Key Health Concerns
+### 2.6. Targeting Key Health Concerns
 
 #### Weight and BMI Solutions:
 With 50% of users having an overweight BMI, Bellabeat should focus on weight management tools, personalized tips, and potential nutrition partnerships to help users reach their health goals. Marketing campaigns should emphasize how the app supports users in achieving sustainable weight loss and fitness goals through precise tracking and actionable insights.
 
-### Conclusion
+### 3. Conclusion
 By strategically driving feature adoption, boosting engagement, and offering personalized solutions, Bellabeat can enhance user experience, optimize health outcomes, and strengthen its position as a leader in the wearable health market. Tailored campaigns focused on convenience, community, and personalized health insights will help Bellabeat continue to build a loyal and engaged user base.
