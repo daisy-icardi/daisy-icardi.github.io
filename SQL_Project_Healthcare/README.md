@@ -43,3 +43,6 @@ The stark rise in conditions and immunizations during 2020 and 2021 reflects the
 Geographically, Middlesex and Norfolk Counties dominated in healthcare engagement, with the former leading in hospital encounters and the latter in immunizations. This regional variation underscores the need for tailored approaches to healthcare delivery based on community-specific needs. The high prevalence of psychological stress and pregnancy-related conditions across all age groups further calls for enhanced mental health resources and comprehensive care for women.
 
 In conclusion, these findings underscore the dynamic nature of healthcare demand and the critical importance of aligning services to demographic, temporal, and geographic trends. By addressing these insights, healthcare providers can enhance efficiency, improve patient outcomes, and better allocate resources to meet the evolving needs of diverse patient populations.
+
+### 4. Interactive Dashboard Links
+For an interactive experience with the data, findings, and conclusions, please access the following [link](https://public.tableau.com/app/profile/daisy.icardi/viz/HealthcareInsightsSyntheaData/PatientsDashboard#1). 
