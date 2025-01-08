@@ -13,12 +13,18 @@ The dataset further indicates that 100% of registered patients are female, 82.2%
 Regardless of registration status, most patients—based on the combined totals across datasets—are from Boston and Middlesex County in Massachusetts. 
 
 #### Encounter Data Insights
-Encounters with problems were most often associated with nonspecific radiological findings and anemia, while pregnancy-related conditions and acute bronchitis were more common in ambulatory visits. This data highlighted significant patterns in healthcare interactions based on condition type and encounter class.
+An analysis of patient encounters revealed that 2021 recorded the highest number of encounters, while 2023 reported the lowest. The majority of these encounters were from patients residing in Middlesex County, followed by Worcester County. Middle-aged adults (aged 40–65) accounted for a significant proportion of these encounters, representing 56.6% of the total.
+
+The majority of patient encounters were ambulatory or outpatient in nature. The most frequently documented type of encounter was "hospital encounter with problem," followed by "overall assessment of patients". 
+
+In terms of encounter duration, November recorded the longest average and maximum encounter lengths. Conversely, March had the shortest average encounter length, while January recorded the shortest maximum encounter duration.
 
 #### Conditions Data Insights
 The year 2020 recorded the highest number of reported conditions (10,448), likely driven by the pandemic, while 1914 and 1915 had the lowest (2). Chronic sinusitis was associated with the longest hospital stays (up to 26,841 days), while conditions like bacteremia showed no recorded hospital stay, indicating outpatient management.
 
 Psychological stress was the most common condition across all age groups, with pregnancy-related conditions following closely. Middle-aged adults were particularly affected by psychological stress, while pregnancy-related conditions were common across all groups.
+
+Encounters with problems were most often associated with nonspecific radiological findings and anemia, while pregnancy-related conditions and acute bronchitis were more common in ambulatory visits. This data highlighted significant patterns in healthcare interactions based on condition type and encounter class.
 
 ### Immunization Data Insights
 Immunization trends showed a peak in 2021, with COVID-19 vaccines driving the highest volume, while 1946 had the lowest number of immunizations. There was a clear seasonal pattern in flu vaccinations, peaking in March and April, and showing a delayed trend in Massachusetts, likely due to the state's winter flu season (January to March). The Seasonal Flu Vaccine was the most frequently administered, followed by COVID-19 vaccines.
