@@ -1,4 +1,4 @@
-## How Can Healthcare Data Reveal Key Trends to Optimize Patient Care and System Efficiency?
+## _How Can Healthcare Data Reveal Key Trends to Optimize Patient Care and System Efficiency?_
 
 ![Emergency Room](https://github.com/user-attachments/assets/c1fda9f5-4b26-4ff7-a9d6-d19f9c5975d7)
 
