@@ -3,7 +3,7 @@
 ![Emergency Room](https://github.com/user-attachments/assets/c1fda9f5-4b26-4ff7-a9d6-d19f9c5975d7)
 
 ### 1. Project Overview
-This project analyzed a century’s worth of healthcare data to explore trends across patients' registered as well as patient conditions, encounters, and immunizations. By leveraging temporal and categorical analyses, the study aimed to understand healthcare utilization patterns and behaviors across diverse demographic and clinical factors. The analysis focused on encounter classes, hospital stay durations, outpatient visits, and immunization timing, with an emphasis on uncovering how these factors varied over time and across different population groups.
+This project analyzed a century’s worth of healthcare data to explore trends across patients' registered as well as patient conditions, encounters, and immunizations regardless of registration status. By leveraging temporal and categorical analyses, the study aimed to understand healthcare utilization patterns and behaviors across diverse demographic and clinical factors. The analysis focused on encounter classes, hospital stay durations, outpatient visits, and immunization timing, with an emphasis on uncovering how these factors varied over time and across different population groups.
 
 The project also sought to provide insights into how healthcare delivery could be optimized by identifying key patterns in patient interactions, condition prevalence, and immunization trends, offering a foundation for data-driven decision-making in healthcare systems.
 
